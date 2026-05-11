@@ -1,0 +1,64 @@
+/* CSS Reset */
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+/* Hero Section Custom Styles */
+section.py-5[style*="background"] {
+	padding-top: 5rem !important;
+	padding-bottom: 5rem !important;
+	background: linear-gradient(90deg, #0056b3 60%, #007bff 100%) !important;
+	color: #fff !important;
+	text-align: center;
+}
+section.py-5[style*="background"] h1 {
+	font-size: 2.8rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+}
+section.py-5[style*="background"] p {
+	font-size: 1.3rem;
+	margin-bottom: 2rem;
+}
+
+/* Card Hover Effects */
+.card {
+	transition: box-shadow 0.3s, transform 0.3s;
+}
+.card:hover, .card:focus {
+	box-shadow: 0 8px 32px rgba(0, 86, 179, 0.15), 0 1.5px 6px rgba(0,0,0,0.08);
+	transform: translateY(-4px) scale(1.03);
+	z-index: 2;
+}
+
+/* Footer Styling Consistent with Navbar */
+footer.bg-dark {
+	background-color: #212529 !important;
+	color: #f8f9fa !important;
+	font-size: 1rem;
+	letter-spacing: 0.01em;
+}
+footer.bg-dark a {
+	color: #ffc107;
+	text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+	section.py-5[style*="background"] {
+		padding-top: 2.5rem !important;
+		padding-bottom: 2.5rem !important;
+	}
+	.display-4 {
+		font-size: 2rem;
+	}
+	.card {
+		margin-bottom: 1.5rem;
+	}
+	.container, .container-fluid {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+}
