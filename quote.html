@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Get a Quote | Pinnacle Shield Insurance</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container">
+				<a class="navbar-brand" href="index.html">Pinnacle Shield Insurance</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="index.html">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="quote.html">Get a Quote</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="about.html">About Us</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="faq.html">FAQ</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main class="py-5">
+		<div class="container">
+			<h1 class="mb-3 text-center">Get Your Insurance Quote</h1>
+			<p class="lead text-center mb-5">Fill out the form below to receive a personalized insurance quote. Select your insurance type to get started. The form will update to show only the fields relevant to your selection.</p>
+
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="card shadow mb-4">
+						<div class="card-body">
+							<!-- Insurance Type Selector -->
+							<div class="mb-4 text-center">
+								<div class="btn-group w-100" role="group" aria-label="Insurance Type Selector">
+									<input type="radio" class="btn-check" name="insuranceType" id="autoType" value="auto" autocomplete="off" checked>
+									<label class="btn btn-outline-primary d-flex flex-column align-items-center py-3" for="autoType">
+										<span class="fs-2 mb-1"><i class="bi bi-car-front"></i></span>
+										Auto Insurance
+									</label>
+									<input type="radio" class="btn-check" name="insuranceType" id="homeType" value="home" autocomplete="off">
+									<label class="btn btn-outline-success d-flex flex-column align-items-center py-3" for="homeType">
+										<span class="fs-2 mb-1"><i class="bi bi-house-door"></i></span>
+										Home Insurance
+									</label>
+									<input type="radio" class="btn-check" name="insuranceType" id="lifeType" value="life" autocomplete="off">
+									<label class="btn btn-outline-danger d-flex flex-column align-items-center py-3" for="lifeType">
+										<span class="fs-2 mb-1"><i class="bi bi-heart-fill"></i></span>
+										Life Insurance
+									</label>
+								</div>
+							</div>
+
+							<!-- Quote Form -->
+							<form id="quoteForm">
+								<!-- Auto Insurance Fields -->
+								<div class="insurance-fields" id="autoFields">
+									<div class="row g-3">
+										<div class="col-md-6">
+											<label for="autoName" class="form-label">Full Name</label>
+											<input type="text" class="form-control" id="autoName" name="autoName" required minlength="2">
+										</div>
+										<div class="col-md-3">
+											<label for="autoAge" class="form-label">Age</label>
+											<input type="number" class="form-control" id="autoAge" name="autoAge" required min="16" max="100">
+										</div>
+										<div class="col-md-3">
+											<label for="autoZip" class="form-label">ZIP Code</label>
+											<input type="text" class="form-control" id="autoZip" name="autoZip" required pattern="\d{5}">
+										</div>
+										<div class="col-md-4">
+											<label for="vehicleYear" class="form-label">Vehicle Year</label>
+											<input type="number" class="form-control" id="vehicleYear" name="vehicleYear" required min="1990" max="2026">
+										</div>
+										<div class="col-md-4">
+											<label for="vehicleMake" class="form-label">Vehicle Make</label>
+											<select class="form-select" id="vehicleMake" name="vehicleMake" required>
+												<option value="">Select</option>
+												<option value="Toyota">Toyota</option>
+												<option value="Honda">Honda</option>
+												<option value="Ford">Ford</option>
+												<option value="BMW">BMW</option>
+												<option value="Tesla">Tesla</option>
+												<option value="Other">Other</option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label for="vehicleModel" class="form-label">Vehicle Model</label>
+											<input type="text" class="form-control" id="vehicleModel" name="vehicleModel" required>
+										</div>
+										<div class="col-md-6">
+											<label for="annualMileage" class="form-label">Annual Mileage</label>
+											<select class="form-select" id="annualMileage" name="annualMileage" required>
+												<option value="">Select</option>
+												<option value="Under 5000">Under 5000</option>
+												<option value="5000-10000">5000-10000</option>
+												<option value="10001-15000">10001-15000</option>
+												<option value="15001-20000">15001-20000</option>
+												<option value="Over 20000">Over 20000</option>
+											</select>
+										</div>
+										<div class="col-md-6">
+											<label for="drivingRecord" class="form-label">Driving Record</label>
+											<select class="form-select" id="drivingRecord" name="drivingRecord" required>
+												<option value="">Select</option>
+												<option value="Clean">Clean</option>
+												<option value="1 Ticket">1 Ticket</option>
+												<option value="2+ Tickets">2+ Tickets</option>
+												<option value="Accident in Last 3 Years">Accident in Last 3 Years</option>
+											</select>
+										</div>
+										<div class="col-12">
+											<label class="form-label d-block">Coverage Level</label>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="autoCoverage" id="autoBasic" value="Basic" required>
+												<label class="form-check-label" for="autoBasic">Basic</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="autoCoverage" id="autoStandard" value="Standard">
+												<label class="form-check-label" for="autoStandard">Standard</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="autoCoverage" id="autoPremium" value="Premium">
+												<label class="form-check-label" for="autoPremium">Premium</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Home Insurance Fields -->
+								<div class="insurance-fields d-none" id="homeFields">
+									<div class="row g-3">
+										<div class="col-md-6">
+											<label for="homeName" class="form-label">Full Name</label>
+											<input type="text" class="form-control" id="homeName" name="homeName" required minlength="2">
+										</div>
+										<div class="col-md-3">
+											<label for="homeAge" class="form-label">Age</label>
+											<input type="number" class="form-control" id="homeAge" name="homeAge" required min="18" max="100">
+										</div>
+										<div class="col-md-3">
+											<label for="homeZip" class="form-label">ZIP Code</label>
+											<input type="text" class="form-control" id="homeZip" name="homeZip" required pattern="\d{5}">
+										</div>
+										<div class="col-md-6">
+											<label for="homeValue" class="form-label">Home Value ($)</label>
+											<input type="number" class="form-control" id="homeValue" name="homeValue" required min="50000">
+										</div>
+										<div class="col-md-6">
+											<label for="yearBuilt" class="form-label">Year Built</label>
+											<input type="number" class="form-control" id="yearBuilt" name="yearBuilt" required min="1900" max="2026">
+										</div>
+										<div class="col-md-6">
+											<label for="squareFootage" class="form-label">Square Footage</label>
+											<input type="number" class="form-control" id="squareFootage" name="squareFootage" required min="500" max="10000">
+										</div>
+										<div class="col-md-6">
+											<label for="constructionType" class="form-label">Construction Type</label>
+											<select class="form-select" id="constructionType" name="constructionType" required>
+												<option value="">Select</option>
+												<option value="Wood Frame">Wood Frame</option>
+												<option value="Brick">Brick</option>
+												<option value="Concrete">Concrete</option>
+												<option value="Steel">Steel</option>
+											</select>
+										</div>
+										<div class="col-md-6">
+											<div class="form-check mt-4">
+												<input class="form-check-input" type="checkbox" id="securitySystem" name="securitySystem">
+												<label class="form-check-label" for="securitySystem">Has Security System</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-check mt-4">
+												<input class="form-check-input" type="checkbox" id="fireSprinklers" name="fireSprinklers">
+												<label class="form-check-label" for="fireSprinklers">Has Fire Sprinklers</label>
+											</div>
+										</div>
+										<div class="col-12">
+											<label class="form-label d-block">Coverage Level</label>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="homeCoverage" id="homeBasic" value="Basic" required>
+												<label class="form-check-label" for="homeBasic">Basic</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="homeCoverage" id="homeStandard" value="Standard">
+												<label class="form-check-label" for="homeStandard">Standard</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="homeCoverage" id="homePremium" value="Premium">
+												<label class="form-check-label" for="homePremium">Premium</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Life Insurance Fields -->
+								<div class="insurance-fields d-none" id="lifeFields">
+									<div class="row g-3">
+										<div class="col-md-6">
+											<label for="lifeName" class="form-label">Full Name</label>
+											<input type="text" class="form-control" id="lifeName" name="lifeName" required minlength="2">
+										</div>
+										<div class="col-md-3">
+											<label for="lifeAge" class="form-label">Age</label>
+											<input type="number" class="form-control" id="lifeAge" name="lifeAge" required min="18" max="85">
+										</div>
+										<div class="col-md-3">
+											<label for="lifeZip" class="form-label">ZIP Code</label>
+											<input type="text" class="form-control" id="lifeZip" name="lifeZip" required pattern="\d{5}">
+										</div>
+										<div class="col-md-4">
+											<label for="gender" class="form-label">Gender</label>
+											<select class="form-select" id="gender" name="gender" required>
+												<option value="">Select</option>
+												<option value="Male">Male</option>
+												<option value="Female">Female</option>
+												<option value="Non-binary">Non-binary</option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label class="form-label d-block">Smoker</label>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="smoker" id="smokerYes" value="Yes" required>
+												<label class="form-check-label" for="smokerYes">Yes</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="smoker" id="smokerNo" value="No">
+												<label class="form-check-label" for="smokerNo">No</label>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<label for="coverageAmount" class="form-label">Coverage Amount</label>
+											<select class="form-select" id="coverageAmount" name="coverageAmount" required>
+												<option value="">Select</option>
+												<option value="$100000">$100,000</option>
+												<option value="$250000">$250,000</option>
+												<option value="$500000">$500,000</option>
+												<option value="$1000000">$1,000,000</option>
+											</select>
+										</div>
+										<div class="col-md-6">
+											<label for="exercise" class="form-label">Exercise Frequency</label>
+											<select class="form-select" id="exercise" name="exercise" required>
+												<option value="">Select</option>
+												<option value="Rarely">Rarely</option>
+												<option value="1-2 times per week">1-2 times per week</option>
+												<option value="3-4 times per week">3-4 times per week</option>
+												<option value="5+ times per week">5+ times per week</option>
+											</select>
+										</div>
+										<div class="col-md-6">
+											<div class="form-check mt-4">
+												<input class="form-check-input" type="checkbox" id="preExisting" name="preExisting">
+												<label class="form-check-label" for="preExisting">Pre-existing Conditions</label>
+											</div>
+										</div>
+										<div class="col-12">
+											<label class="form-label d-block">Coverage Level</label>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="lifeCoverage" id="lifeBasic" value="Basic" required>
+												<label class="form-check-label" for="lifeBasic">Basic</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="lifeCoverage" id="lifeStandard" value="Standard">
+												<label class="form-check-label" for="lifeStandard">Standard</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="lifeCoverage" id="lifePremium" value="Premium">
+												<label class="form-check-label" for="lifePremium">Premium</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-4 text-center">
+									<button type="submit" class="btn btn-warning btn-lg">Get Quote</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!-- Results Section (initially hidden) -->
+					<div id="quoteResults" class="card shadow d-none">
+						<div class="card-body">
+							<h4 class="card-title">Your Quote</h4>
+							<div id="resultsContent">
+								<!-- Results will be displayed here -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="bg-dark text-light py-4 mt-5">
+		<div class="container text-center">
+			<small>&copy; 2026 Pinnacle Shield Insurance. All rights reserved. | Contact: info@pinnacleshield.com | (555) 123-4567</small>
+		</div>
+	</footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
