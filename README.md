@@ -15,6 +15,7 @@ This approach ensures a modern, professional appearance while prioritizing usabi
 
 Pinnacle Shield Insurance is a modern, responsive insurance website built with HTML5, CSS3, Bootstrap 5, and JavaScript. It provides users with information about insurance products and allows them to easily request a quote.
 
+
 ## Features
 
 - Responsive Bootstrap 5 layout for all devices
@@ -27,6 +28,14 @@ Pinnacle Shield Insurance is a modern, responsive insurance website built with H
 - "Why Choose Us" section with benefit cards
 - Insurance types section (Auto, Home, Life)
 - Footer with contact info
+- **Dynamic Quote Form:**
+	- Insurance type selector (Auto, Home, Life) with icon cards
+	- Form fields update based on selected insurance type
+	- Only visible fields are required and validated
+	- Custom JavaScript validation with user-friendly error messages
+	- Mock quote calculation based on user input and insurance type
+	- Results section with premium summary and factor breakdown
+	- "Get Another Quote" button to reset the form and results
 
 ## Pages
 
@@ -35,13 +44,14 @@ Pinnacle Shield Insurance is a modern, responsive insurance website built with H
 - **About Us (about.html):** Company information
 - **FAQ (faq.html):** Frequently asked questions
 
+
 ## Tech Stack
 
 - HTML5 & Semantic Elements
 - CSS3 & Custom Styles
 - [Bootstrap 5](https://getbootstrap.com/) (CDN)
 - [Bootstrap Icons](https://icons.getbootstrap.com/) (CDN)
-- JavaScript (main.js for interactivity)
+- JavaScript (main.js for navigation, js/quote.js for quote logic)
 
 ## Project Structure
 
@@ -59,17 +69,27 @@ pinnacle-shield-insurance/
 │   └── quote.js
 ```
 
+
 ## How to Use
 
 1. Clone or download this repository.
-2. Open `index.html` in your web browser.
+2. Open `index.html` or `quote.html` in your web browser.
 3. All pages are static and require no backend.
+4. For the quote form, select an insurance type, fill out the fields, and click "Get Quote" to see your mock premium and a breakdown of factors.
+
 
 ## Customization
 
 - Update content in the HTML files as needed.
 - Modify `css/styles.css` for custom styles.
-- Add interactivity in `js/main.js` or `js/quote.js`.
+- Add or adjust interactivity in `js/main.js` (navigation, smooth scroll) or `js/quote.js` (form logic, validation, quote calculation).
+
+## Recent Improvements
+
+- Added dynamic quote form with insurance type selector and context-sensitive fields
+- Improved accessibility and validation for all form types
+- JavaScript now ensures only visible fields are required, preventing browser validation errors
+- Results section provides a clear summary and breakdown of quote factors
 
 ## Credits
 
