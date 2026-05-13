@@ -36,10 +36,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+
 	typeRadios.forEach(function (radio) {
 		radio.addEventListener('change', function () {
 			showFields(this.value);
-			clearErrors(document.getElementById('quoteForm'));
+			var form = document.getElementById('quoteForm');
+			if (form) {
+				clearErrors(form);
+			}
+			// Hide the current quote card
+			var resultsDiv = document.getElementById('quoteResults');
+			if (resultsDiv) {
+				resultsDiv.classList.add('d-none');
+			}
 		});
 	});
 
@@ -59,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (valid) {
 			var result = calculateQuote(type.value, form);
 			showResults(result);
+			// Reset form fields after a short delay, but keep the quote visible
+			setTimeout(function() {
+				form.reset();
+				clearErrors(form);
+				var checked = document.querySelector('input[name="insuranceType"]:checked');
+				if (checked) showFields(checked.value);
+			}, 500);
 		}
 	});
 
@@ -92,7 +108,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
+
 // --- Validation Helpers ---
+function clearErrors(form) {
+	var invalids = form.querySelectorAll('.is-invalid');
+	invalids.forEach(function (el) {
+		el.classList.remove('is-invalid');
+	});
+	var feedbacks = form.querySelectorAll('.invalid-feedback');
+	feedbacks.forEach(function (el) {
+		el.textContent = '';
+	});
+}
+
 function validateZipCode(zip) {
 	return /^\d{5}$/.test(zip);
 }
@@ -108,14 +136,54 @@ function showError(inputElement, message) {
 	feedback.textContent = message;
 }
 
-function clearErrors(form) {
-	var invalids = form.querySelectorAll('.is-invalid');
-	invalids.forEach(function (el) {
-		el.classList.remove('is-invalid');
+// Render saved quotes below the card
+function renderSavedQuotes() {
+	var section = document.getElementById('savedQuotesSection');
+	var list = document.getElementById('savedQuotesList');
+	var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+	if (!section || !list) return;
+	if (saved.length === 0) {
+		section.classList.add('d-none');
+		list.innerHTML = '';
+		return;
+	}
+	section.classList.remove('d-none');
+	list.innerHTML = '';
+	saved.forEach(function(quote, idx) {
+		var div = document.createElement('div');
+		div.className = 'border rounded p-3 mb-3 bg-light saved-quote-item';
+		div.style.cursor = 'pointer';
+		var typeLabel = {
+			auto: 'Auto Insurance',
+			home: 'Home Insurance',
+			life: 'Life Insurance'
+		}[quote.type] || '';
+		div.innerHTML =
+			'<div class="d-flex justify-content-between align-items-center mb-2">'
+			+ '<strong>' + quote.name + '</strong>'
+			+ '<span class="badge bg-secondary">' + typeLabel + '</span>'
+			+ '</div>'
+			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
+			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+			+ '<div class="text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+			+ '<button class="btn btn-sm btn-outline-danger mt-2" data-remove="' + idx + '">Remove</button>';
+		// Click to view details
+		div.addEventListener('click', function(e) {
+			if (e.target && e.target.hasAttribute('data-remove')) return; // Don't trigger on remove button
+			showSavedQuoteModal(quote);
+		});
+		list.appendChild(div);
 	});
-	var feedbacks = form.querySelectorAll('.invalid-feedback');
-	feedbacks.forEach(function (el) {
-		el.textContent = '';
+	// Remove handler
+	list.querySelectorAll('button[data-remove]').forEach(function(btn) {
+		btn.addEventListener('click', function(e) {
+			e.stopPropagation();
+			var idx = parseInt(this.getAttribute('data-remove'));
+			var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+			saved.splice(idx, 1);
+			localStorage.setItem('savedQuotes', JSON.stringify(saved));
+			renderSavedQuotes();
+		});
 	});
 }
 
@@ -146,8 +214,18 @@ function validateForm(type, form) {
 		check(mileage, v => v, 'Select annual mileage');
 		check(record, v => v, 'Select driving record');
 		if (!form.querySelector('input[name="autoCoverage"]:checked')) {
-			showError(form.autoPremium, 'Select coverage level');
+			var err = document.getElementById('autoCoverageError');
+			if (err) {
+				err.textContent = 'Select coverage level';
+				err.style.display = '';
+			}
 			valid = false;
+		} else {
+			var err = document.getElementById('autoCoverageError');
+			if (err) {
+				err.textContent = '';
+				err.style.display = 'none';
+			}
 		}
 	} else if (type === 'home') {
 		var name = form.homeName;
@@ -166,8 +244,18 @@ function validateForm(type, form) {
 		check(sqft, v => v && v >= 500 && v <= 10000, '500-10000 sq ft required');
 		check(constr, v => v, 'Select construction type');
 		if (!form.querySelector('input[name="homeCoverage"]:checked')) {
-			showError(form.homePremium, 'Select coverage level');
+			var err = document.getElementById('homeCoverageError');
+			if (err) {
+				err.textContent = 'Select coverage level';
+				err.style.display = '';
+			}
 			valid = false;
+		} else {
+			var err = document.getElementById('homeCoverageError');
+			if (err) {
+				err.textContent = '';
+				err.style.display = 'none';
+			}
 		}
 	} else if (type === 'life') {
 		var name = form.lifeName;
@@ -189,8 +277,18 @@ function validateForm(type, form) {
 		check(amount, v => v, 'Select coverage amount');
 		check(exercise, v => v, 'Select exercise frequency');
 		if (!form.querySelector('input[name="lifeCoverage"]:checked')) {
-			showError(form.lifePremium, 'Select coverage level');
+			var err = document.getElementById('lifeCoverageError');
+			if (err) {
+				err.textContent = 'Select coverage level';
+				err.style.display = '';
+			}
 			valid = false;
+		} else {
+			var err = document.getElementById('lifeCoverageError');
+			if (err) {
+				err.textContent = '';
+				err.style.display = 'none';
+			}
 		}
 	}
 	return valid;
@@ -302,13 +400,13 @@ function showResults(result) {
 	// Clear previous
 	content.innerHTML = '';
 	// Summary
-	var summary = document.createElement('div');
-	summary.className = 'mb-4';
 	var typeLabel = {
 		auto: 'Auto Insurance',
 		home: 'Home Insurance',
 		life: 'Life Insurance'
 	}[result.type] || '';
+	var summary = document.createElement('div');
+	summary.className = 'mb-4';
 	summary.innerHTML =
 		'<h5>Quote for <span class="text-primary"></span></h5>' +
 		'<ul class="list-unstyled mb-0">' +
@@ -330,6 +428,12 @@ function showResults(result) {
 	});
 	table.appendChild(tbody);
 	content.appendChild(table);
+	// Save Quote button
+	var saveBtn = document.createElement('button');
+	saveBtn.className = 'btn btn-primary mt-3 me-2';
+	saveBtn.id = 'saveQuote';
+	saveBtn.textContent = 'Save This Quote';
+	content.appendChild(saveBtn);
 	// Reset button
 	var resetBtn = document.createElement('button');
 	resetBtn.className = 'btn btn-secondary mt-3';
@@ -338,7 +442,112 @@ function showResults(result) {
 	content.appendChild(resetBtn);
 	resultsDiv.classList.remove('d-none');
 	resultsDiv.scrollIntoView({ behavior: 'smooth' });
+	// Save quote event
+	saveBtn.addEventListener('click', function() {
+		saveQuote(result);
+	});
+	// Show saved quotes section if any
+	renderSavedQuotes();
 }
+
+// Save quote to localStorage
+function saveQuote(quote) {
+	var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+	// Add timestamp for uniqueness
+	quote.savedAt = new Date().toISOString();
+	saved.unshift(quote); // newest first
+	localStorage.setItem('savedQuotes', JSON.stringify(saved));
+	renderSavedQuotes();
+}
+
+// Render saved quotes below the card
+function renderSavedQuotes() {
+	var section = document.getElementById('savedQuotesSection');
+	var list = document.getElementById('savedQuotesList');
+	var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+	if (!section || !list) return;
+	if (saved.length === 0) {
+		section.classList.add('d-none');
+		list.innerHTML = '';
+		return;
+	}
+	section.classList.remove('d-none');
+	list.innerHTML = '';
+	saved.forEach(function(quote, idx) {
+		var div = document.createElement('div');
+		div.className = 'border rounded p-3 mb-3 bg-light saved-quote-item';
+		div.style.cursor = 'pointer';
+		var typeLabel = {
+			auto: 'Auto Insurance',
+			home: 'Home Insurance',
+			life: 'Life Insurance'
+		}[quote.type] || '';
+		div.innerHTML =
+			'<div class="d-flex justify-content-between align-items-center mb-2">'
+			+ '<strong>' + quote.name + '</strong>'
+			+ '<span class="badge bg-secondary">' + typeLabel + '</span>'
+			+ '</div>'
+			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
+			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+			+ '<div class="text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+			+ '<button class="btn btn-sm btn-outline-danger mt-2" data-remove="' + idx + '">Remove</button>';
+		// Click to view details
+		div.addEventListener('click', function(e) {
+			if (e.target && e.target.hasAttribute('data-remove')) return; // Don't trigger on remove button
+			showSavedQuoteModal(quote);
+		});
+		list.appendChild(div);
+	});
+	// Remove handler
+	list.querySelectorAll('button[data-remove]').forEach(function(btn) {
+		btn.addEventListener('click', function(e) {
+			e.stopPropagation();
+			var idx = parseInt(this.getAttribute('data-remove'));
+			var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+			saved.splice(idx, 1);
+			localStorage.setItem('savedQuotes', JSON.stringify(saved));
+			renderSavedQuotes();
+		});
+	});
+}
+
+// Show saved quote in a modal overlay
+function showSavedQuoteModal(quote) {
+	var modalBody = document.getElementById('savedQuoteModalBody');
+	if (!modalBody) return;
+	var typeLabel = {
+		auto: 'Auto Insurance',
+		home: 'Home Insurance',
+		life: 'Life Insurance'
+	}[quote.type] || '';
+	var html = '';
+	html += '<div class="mb-3">'
+		+ '<h5 class="mb-1">' + typeLabel + ' for <span class="text-primary">' + quote.name + '</span></h5>'
+		+ '<div class="mb-2 text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+		+ '<div><strong>Monthly Premium:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span></div>'
+		+ '<div><strong>Annual Premium:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+		+ '</div>';
+	// Breakdown table
+	if (quote.breakdown && Array.isArray(quote.breakdown)) {
+		html += '<table class="table table-bordered table-striped">'
+			+ '<thead><tr><th>Factor</th><th>Your Info</th><th>Impact</th></tr></thead><tbody>';
+		quote.breakdown.forEach(function(row) {
+			html += '<tr>'
+				+ '<td>' + row[0] + '</td>'
+				+ '<td>' + row[1] + '</td>'
+				+ '<td>' + row[2] + '</td>'
+				+ '</tr>';
+		});
+		html += '</tbody></table>';
+	}
+	modalBody.innerHTML = html;
+	var modal = new bootstrap.Modal(document.getElementById('savedQuoteModal'));
+	modal.show();
+}
+// On page load, render saved quotes if any
+document.addEventListener('DOMContentLoaded', function() {
+	renderSavedQuotes();
+});
 
 function addBreakdownRow(tbody, factor, userValue, impact) {
 	var row = document.createElement('tr');

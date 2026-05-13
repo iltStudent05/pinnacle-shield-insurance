@@ -1,3 +1,17 @@
+					<!-- Saved Quote Modal -->
+					<div class="modal fade" id="savedQuoteModal" tabindex="-1" aria-labelledby="savedQuoteModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg modal-dialog-centered">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="savedQuoteModalLabel">Saved Quote Details</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body" id="savedQuoteModalBody">
+									<!-- Quote details will be injected here -->
+								</div>
+							</div>
+						</div>
+					</div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,19 +88,19 @@
 									<div class="row g-3">
 										<div class="col-md-6">
 											<label for="autoName" class="form-label">Full Name</label>
-											<input type="text" class="form-control" id="autoName" name="autoName" required minlength="2">
+											<input type="text" class="form-control" id="autoName" name="autoName" required minlength="2" placeholder="e.g. Jane Doe">
 										</div>
 										<div class="col-md-3">
 											<label for="autoAge" class="form-label">Age</label>
-											<input type="number" class="form-control" id="autoAge" name="autoAge" required min="16" max="100">
+											<input type="number" class="form-control" id="autoAge" name="autoAge" required min="16" max="100" placeholder="e.g. 30">
 										</div>
 										<div class="col-md-3">
 											<label for="autoZip" class="form-label">ZIP Code</label>
-											<input type="text" class="form-control" id="autoZip" name="autoZip" required pattern="\d{5}">
+											<input type="text" class="form-control" id="autoZip" name="autoZip" required pattern="\d{5}" placeholder="e.g. 90210">
 										</div>
 										<div class="col-md-4">
 											<label for="vehicleYear" class="form-label">Vehicle Year</label>
-											<input type="number" class="form-control" id="vehicleYear" name="vehicleYear" required min="1990" max="2026">
+											<input type="number" class="form-control" id="vehicleYear" name="vehicleYear" required min="1990" max="2026" placeholder="e.g. 2018">
 										</div>
 										<div class="col-md-4">
 											<label for="vehicleMake" class="form-label">Vehicle Make</label>
@@ -102,7 +116,7 @@
 										</div>
 										<div class="col-md-4">
 											<label for="vehicleModel" class="form-label">Vehicle Model</label>
-											<input type="text" class="form-control" id="vehicleModel" name="vehicleModel" required>
+											<input type="text" class="form-control" id="vehicleModel" name="vehicleModel" required placeholder="e.g. Camry">
 										</div>
 										<div class="col-md-6">
 											<label for="annualMileage" class="form-label">Annual Mileage</label>
@@ -139,6 +153,7 @@
 												<input class="form-check-input" type="radio" name="autoCoverage" id="autoPremium" value="Premium">
 												<label class="form-check-label" for="autoPremium">Premium</label>
 											</div>
+											<span id="autoCoverageError" class="invalid-feedback d-block" style="display:none"></span>
 										</div>
 									</div>
 								</div>
@@ -148,27 +163,27 @@
 									<div class="row g-3">
 										<div class="col-md-6">
 											<label for="homeName" class="form-label">Full Name</label>
-											<input type="text" class="form-control" id="homeName" name="homeName" required minlength="2">
+											<input type="text" class="form-control" id="homeName" name="homeName" required minlength="2" placeholder="e.g. John Smith">
 										</div>
 										<div class="col-md-3">
 											<label for="homeAge" class="form-label">Age</label>
-											<input type="number" class="form-control" id="homeAge" name="homeAge" required min="18" max="100">
+											<input type="number" class="form-control" id="homeAge" name="homeAge" required min="18" max="100" placeholder="e.g. 45">
 										</div>
 										<div class="col-md-3">
 											<label for="homeZip" class="form-label">ZIP Code</label>
-											<input type="text" class="form-control" id="homeZip" name="homeZip" required pattern="\d{5}">
+											<input type="text" class="form-control" id="homeZip" name="homeZip" required pattern="\d{5}" placeholder="e.g. 10001">
 										</div>
 										<div class="col-md-6">
 											<label for="homeValue" class="form-label">Home Value ($)</label>
-											<input type="number" class="form-control" id="homeValue" name="homeValue" required min="50000">
+											<input type="number" class="form-control" id="homeValue" name="homeValue" required min="50000" placeholder="e.g. 350000">
 										</div>
 										<div class="col-md-6">
 											<label for="yearBuilt" class="form-label">Year Built</label>
-											<input type="number" class="form-control" id="yearBuilt" name="yearBuilt" required min="1900" max="2026">
+											<input type="number" class="form-control" id="yearBuilt" name="yearBuilt" required min="1900" max="2026" placeholder="e.g. 2005">
 										</div>
 										<div class="col-md-6">
 											<label for="squareFootage" class="form-label">Square Footage</label>
-											<input type="number" class="form-control" id="squareFootage" name="squareFootage" required min="500" max="10000">
+											<input type="number" class="form-control" id="squareFootage" name="squareFootage" required min="500" max="10000" placeholder="e.g. 2200">
 										</div>
 										<div class="col-md-6">
 											<label for="constructionType" class="form-label">Construction Type</label>
@@ -206,6 +221,7 @@
 												<input class="form-check-input" type="radio" name="homeCoverage" id="homePremium" value="Premium">
 												<label class="form-check-label" for="homePremium">Premium</label>
 											</div>
+											<span id="homeCoverageError" class="invalid-feedback d-block" style="display:none"></span>
 										</div>
 									</div>
 								</div>
@@ -215,15 +231,15 @@
 									<div class="row g-3">
 										<div class="col-md-6">
 											<label for="lifeName" class="form-label">Full Name</label>
-											<input type="text" class="form-control" id="lifeName" name="lifeName" required minlength="2">
+											<input type="text" class="form-control" id="lifeName" name="lifeName" required minlength="2" placeholder="e.g. Alex Lee">
 										</div>
 										<div class="col-md-3">
 											<label for="lifeAge" class="form-label">Age</label>
-											<input type="number" class="form-control" id="lifeAge" name="lifeAge" required min="18" max="85">
+											<input type="number" class="form-control" id="lifeAge" name="lifeAge" required min="18" max="85" placeholder="e.g. 38">
 										</div>
 										<div class="col-md-3">
 											<label for="lifeZip" class="form-label">ZIP Code</label>
-											<input type="text" class="form-control" id="lifeZip" name="lifeZip" required pattern="\d{5}">
+											<input type="text" class="form-control" id="lifeZip" name="lifeZip" required pattern="\d{5}" placeholder="e.g. 60616">
 										</div>
 										<div class="col-md-4">
 											<label for="gender" class="form-label">Gender</label>
@@ -285,6 +301,7 @@
 												<input class="form-check-input" type="radio" name="lifeCoverage" id="lifePremium" value="Premium">
 												<label class="form-check-label" for="lifePremium">Premium</label>
 											</div>
+											<span id="lifeCoverageError" class="invalid-feedback d-block" style="display:none"></span>
 										</div>
 									</div>
 								</div>
@@ -302,6 +319,17 @@
 							<h4 class="card-title">Your Quote</h4>
 							<div id="resultsContent">
 								<!-- Results will be displayed here -->
+							</div>
+						</div>
+					</div>
+					<!-- Saved Quotes Section -->
+					<div id="savedQuotesSection" class="mt-5 d-none">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Saved Quotes</h5>
+								<div id="savedQuotesList">
+									<!-- Saved quotes will be listed here -->
+								</div>
 							</div>
 						</div>
 					</div>
