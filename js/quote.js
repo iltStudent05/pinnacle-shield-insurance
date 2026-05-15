@@ -81,7 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			updateProgress(2);
 			var form = document.getElementById('quoteForm');
 			if (form) {
+				form.reset();
 				clearErrors(form);
+				// Re-enable Get Quote button
+				var getQuoteBtn = form.querySelector('button[type="submit"]');
+				if (getQuoteBtn) getQuoteBtn.disabled = false;
 			}
 			// Hide the current quote card
 			var resultsDiv = document.getElementById('quoteResults');
@@ -108,7 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			updateProgress(3);
 			var result = calculateQuote(type.value, form);
 			showResults(result);
-			// Do not reset form or stepper here; wait for user action
+			// Disable Get Quote button until reset
+			var getQuoteBtn = form.querySelector('button[type="submit"]');
+			if (getQuoteBtn) getQuoteBtn.disabled = true;
 		}
 	});
 
@@ -122,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				clearErrors(form);
 				updateProgress(1);
 				allFields.forEach(function(div) { if (div) div.classList.add('d-none'); });
+				// Re-enable Get Quote button
+				var getQuoteBtn = form.querySelector('button[type="submit"]');
+				if (getQuoteBtn) getQuoteBtn.disabled = false;
 			}
 		});
 	}
