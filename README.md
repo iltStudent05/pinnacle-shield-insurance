@@ -1,17 +1,20 @@
 # Pinnacle Shield Insurance
 
-Pinnacle Shield Insurance is a modern, responsive insurance website built with HTML5, CSS3, Bootstrap 5, and JavaScript. It provides users with information about insurance products and allows them to easily request a quote. The site is designed for clarity, accessibility, and user engagement, with a focus on usability and conversion.
+Pinnacle Shield Insurance is a modern, responsive insurance website that provides users with information about insurance products and allows them to easily request a quote. The site is designed for clarity, accessibility, and user engagement, with a focus on usability and conversion.
+
+**Live Site:** [https://iltStudent05.github.io/pinnacle-shield-insurance](https://iltStudent05.github.io/pinnacle-shield-insurance)
 # Pinnacle Shield Insurance
 
 Pinnacle Shield Insurance is a modern, responsive insurance website built with HTML5, CSS3, Bootstrap 5, and JavaScript. It provides users with information about insurance products and allows them to easily request a quote.
 
 
 
+
 ## Features
 
-- Responsive Bootstrap 5 layout for all devices, with custom media queries for enhanced mobile and tablet experience
+- Responsive design with Bootstrap 5 and custom media queries
 - Semantic HTML5 structure and accessible navigation
-- Custom CSS for modern look, stepper, and insurance type badges
+- Custom CSS for a modern look, stepper, and insurance type badges
 - Smooth scrolling and dynamic active navigation highlighting
 - Hero section, "Why Choose Us" cards, and insurance types overview
 - Footer with contact info and persistent navigation
@@ -28,8 +31,8 @@ Pinnacle Shield Insurance is a modern, responsive insurance website built with H
   - "Get Another Quote" button to reset the form and results
 - **FAQ Page:**
   - Built with Bootstrap Accordion for a modern, accessible Q&A experience
-  - Includes at least 8 detailed, realistic FAQ items
-  - Search/filter input for instant FAQ filtering (matches only question text for precise results)
+  - At least 8 detailed, realistic FAQ items
+  - Search/filter input for instant FAQ filtering (matches only question text)
   - Fully responsive and styled to match the site
 - **CI/CD Pipeline:**
   - GitHub Actions workflow for validating HTML, CSS, and JS file presence
@@ -43,7 +46,8 @@ Pinnacle Shield Insurance is a modern, responsive insurance website built with H
 - **About Us (about.html):** Company information
 - **FAQ (faq.html):** Frequently asked questions with accordion and search/filter
 
-## Tech Stack
+
+## Technologies Used
 
 - HTML5 & Semantic Elements
 - CSS3 & Custom Styles (with responsive media queries)
@@ -98,6 +102,11 @@ pinnacle-shield-insurance/
 - Accessibility: Improved validation and navigation for all form types
 - JavaScript: Ensures only visible fields are required, preventing browser validation errors
 - Results section: Clear summary and breakdown of quote factors
+
+
+## Author
+
+Donavan Francis
 
 ## Credits
 
