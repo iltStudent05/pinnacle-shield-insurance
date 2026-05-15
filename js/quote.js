@@ -1,41 +1,41 @@
 // --- Form Switching ---
 document.addEventListener('DOMContentLoaded', function () {
-	// --- Modern Stepper Progress Indicator Logic ---
-	const stepCircle1 = document.getElementById('stepCircle1');
-	const stepCircle2 = document.getElementById('stepCircle2');
-	const stepCircle3 = document.getElementById('stepCircle3');
-	const stepSummary = document.getElementById('stepSummary');
-	let currentStep = 1;
-	function updateProgress(step) {
-		currentStep = step;
-		// Reset all
-		[stepCircle1, stepCircle2, stepCircle3].forEach((el, idx) => {
-			if (!el) return;
-			el.classList.remove('active', 'completed', 'bg-primary', 'bg-secondary');
-			el.classList.remove('step-active', 'step-completed', 'step-inactive');
-		});
-		document.querySelectorAll('.step-line').forEach(line => line.classList.remove('completed'));
-		// Step logic
-		if (step === 1) {
-			stepCircle1.classList.add('step-active');
-			stepCircle2.classList.add('step-inactive');
-			stepCircle3.classList.add('step-inactive');
-			stepSummary.textContent = 'Choose the type of insurance you want a quote for.';
-		} else if (step === 2) {
-			stepCircle1.classList.add('step-completed');
-			stepCircle2.classList.add('step-active');
-			stepCircle3.classList.add('step-inactive');
-			document.querySelectorAll('.step-line')[0].classList.add('completed');
-			stepSummary.textContent = 'Fill in your personal and insurance details.';
-		} else if (step === 3) {
-			stepCircle1.classList.add('step-completed');
-			stepCircle2.classList.add('step-completed');
-			stepCircle3.classList.add('step-active');
-			document.querySelectorAll('.step-line')[0].classList.add('completed');
-			document.querySelectorAll('.step-line')[1].classList.add('completed');
-			stepSummary.textContent = 'Review your information and get your quote.';
-		}
-	}
+	   // --- Modern Stepper Progress Indicator Logic ---
+	   const stepCircle1 = document.getElementById('stepCircle1');
+	   const stepCircle2 = document.getElementById('stepCircle2');
+	   const stepCircle3 = document.getElementById('stepCircle3');
+	   const stepSummary = document.getElementById('stepSummary');
+	   let currentStep = 1;
+	   function updateProgress(step) {
+		   currentStep = step;
+		   // Reset all
+		   [stepCircle1, stepCircle2, stepCircle3].forEach((el, idx) => {
+			   if (!el) return;
+			   el.classList.remove('active', 'completed', 'bg-primary', 'bg-secondary');
+			   el.classList.remove('step-active', 'step-completed', 'step-inactive');
+		   });
+		   document.querySelectorAll('.step-line').forEach(line => line.classList.remove('completed'));
+		   // Step logic
+		   if (step === 1) {
+			   stepCircle1.classList.add('step-active');
+			   stepCircle2.classList.add('step-inactive');
+			   stepCircle3.classList.add('step-inactive');
+			   stepSummary.textContent = 'Choose the type of insurance you want a quote for.';
+		   } else if (step === 2) {
+			   stepCircle1.classList.add('step-completed');
+			   stepCircle2.classList.add('step-active');
+			   stepCircle3.classList.add('step-inactive');
+			   document.querySelectorAll('.step-line')[0].classList.add('completed');
+			   stepSummary.textContent = 'Fill in your personal and insurance details.';
+		   } else if (step === 3) {
+			   stepCircle1.classList.add('step-completed');
+			   stepCircle2.classList.add('step-completed');
+			   stepCircle3.classList.add('step-active');
+			   document.querySelectorAll('.step-line')[0].classList.add('completed');
+			   document.querySelectorAll('.step-line')[1].classList.add('completed');
+			   stepSummary.textContent = 'Review your information and get your quote.';
+		   }
+	   }
 	// Hide/show insurance fields
 	var typeRadios = document.querySelectorAll('input[name="insuranceType"]');
 	var autoFields = document.getElementById('autoFields') || document.getElementById('auto-fields');
@@ -546,6 +546,170 @@ function renderSavedQuotes() {
 			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
 			+ '<div class="text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
 			+ '<button class="btn btn-sm btn-outline-danger mt-2" data-remove="' + idx + '">Remove</button>';
+		// Click to view details
+		div.addEventListener('click', function(e) {
+			if (e.target && e.target.hasAttribute('data-remove')) return; // Don't trigger on remove button
+			showSavedQuoteModal(quote);
+		});
+		list.appendChild(div);
+	});
+	// Remove handler
+	list.querySelectorAll('button[data-remove]').forEach(function(btn) {
+		btn.addEventListener('click', function(e) {
+			e.stopPropagation();
+			var idx = parseInt(this.getAttribute('data-remove'));
+			var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+			saved.splice(idx, 1);
+			localStorage.setItem('savedQuotes', JSON.stringify(saved));
+			renderSavedQuotes();
+		});
+	});
+}
+
+// Show saved quote in a modal overlay
+function showSavedQuoteModal(quote) {
+	var modalBody = document.getElementById('savedQuoteModalBody');
+	if (!modalBody) return;
+	var typeLabel = {
+		auto: 'Auto Insurance',
+		home: 'Home Insurance',
+		life: 'Life Insurance'
+	}[quote.type] || '';
+	var html = '';
+	html += '<div class="mb-3">'
+		+ '<h5 class="mb-1">' + typeLabel + ' for <span class="text-primary">' + quote.name + '</span></h5>'
+		+ '<div class="mb-2 text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+		+ '<div><strong>Monthly Premium:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span></div>'
+		+ '<div><strong>Annual Premium:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+		+ '</div>';
+	// Breakdown table
+	if (quote.breakdown && Array.isArray(quote.breakdown)) {
+		html += '<table class="table table-bordered table-striped">'
+			+ '<thead><tr><th>Factor</th><th>Your Info</th><th>Impact</th></tr></thead><tbody>';
+		quote.breakdown.forEach(function(row) {
+			html += '<tr>'
+				+ '<td>' + row[0] + '</td>'
+				+ '<td>' + row[1] + '</td>'
+				+ '<td>' + row[2] + '</td>'
+				+ '</tr>';
+		});
+		html += '</tbody></table>';
+	}
+	modalBody.innerHTML = html;
+	var modal = new bootstrap.Modal(document.getElementById('savedQuoteModal'));
+	modal.show();
+}
+// On page load, render saved quotes if any
+document.addEventListener('DOMContentLoaded', function() {
+	renderSavedQuotes();
+});
+
+// --- Results Display ---
+function showResults(result) {
+	var resultsDiv = document.getElementById('quoteResults');
+	var content = document.getElementById('resultsContent');
+	if (!resultsDiv || !content) return;
+	// Clear previous
+	content.innerHTML = '';
+	// Summary
+	var typeLabel = {
+		auto: 'Auto Insurance',
+		home: 'Home Insurance',
+		life: 'Life Insurance'
+	}[result.type] || '';
+	var summary = document.createElement('div');
+	summary.className = 'mb-4';
+	summary.innerHTML =
+		'<h5>Quote for <span class="text-primary"></span></h5>' +
+		'<ul class="list-unstyled mb-0">' +
+		'<li><strong>Insurance Type:</strong> ' + typeLabel + '</li>' +
+		'<li><strong>Monthly Premium:</strong> <span class="text-success">' + formatCurrency(result.monthly) + '</span></li>' +
+		'<li><strong>Annual Premium:</strong> <span class="text-success">' + formatCurrency(result.annual) + '</span></li>' +
+		'</ul>';
+	summary.querySelector('span.text-primary').textContent = result.name;
+	content.appendChild(summary);
+	// Breakdown table
+	var table = document.createElement('table');
+	table.className = 'table table-striped';
+	var thead = document.createElement('thead');
+	thead.innerHTML = '<tr><th>Factor</th><th>Your Info</th><th>Impact</th></tr>';
+	table.appendChild(thead);
+	var tbody = document.createElement('tbody');
+	result.breakdown.forEach(function (row) {
+		addBreakdownRow(tbody, row[0], row[1], row[2]);
+	});
+	table.appendChild(tbody);
+	content.appendChild(table);
+	// Save Quote button
+	var saveBtn = document.createElement('button');
+	saveBtn.className = 'btn btn-primary mt-3 me-2';
+	saveBtn.id = 'saveQuote';
+	saveBtn.textContent = 'Save This Quote';
+	content.appendChild(saveBtn);
+	// Reset button
+	var resetBtn = document.createElement('button');
+	resetBtn.className = 'btn btn-secondary mt-3';
+	resetBtn.id = 'resetQuote';
+	resetBtn.textContent = 'Get Another Quote';
+	content.appendChild(resetBtn);
+	resultsDiv.classList.remove('d-none');
+	resultsDiv.scrollIntoView({ behavior: 'smooth' });
+	// Save quote event
+	saveBtn.addEventListener('click', function() {
+		saveQuote(result);
+		saveBtn.disabled = true;
+		saveBtn.textContent = 'Quote Saved';
+	});
+	// Show saved quotes section if any
+	renderSavedQuotes();
+}
+
+// Save quote to localStorage
+function saveQuote(quote) {
+	var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+	// Add timestamp for uniqueness
+	quote.savedAt = new Date().toISOString();
+	saved.unshift(quote); // newest first
+	localStorage.setItem('savedQuotes', JSON.stringify(saved));
+	renderSavedQuotes();
+}
+
+// Render saved quotes below the card
+function renderSavedQuotes() {
+	var section = document.getElementById('savedQuotesSection');
+	var list = document.getElementById('savedQuotesList');
+	var saved = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+	if (!section || !list) return;
+	if (saved.length === 0) {
+		section.classList.add('d-none');
+		list.innerHTML = '';
+		return;
+	}
+	section.classList.remove('d-none');
+	list.innerHTML = '';
+	saved.forEach(function(quote, idx) {
+		var div = document.createElement('div');
+		div.className = 'border rounded p-3 mb-3 bg-light saved-quote-item';
+		div.style.cursor = 'pointer';
+		var typeLabel = {
+			auto: 'Auto Insurance',
+			home: 'Home Insurance',
+			life: 'Life Insurance'
+		}[quote.type] || '';
+		var badgeClass =
+			quote.type === 'auto' ? 'badge-auto' :
+			quote.type === 'home' ? 'badge-home' :
+			quote.type === 'life' ? 'badge-life' :
+			'bg-secondary';
+		   div.innerHTML =
+			   '<div class="d-flex justify-content-between align-items-center mb-2">'
+			   + '<strong>' + quote.name + '</strong>'
+			   + '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + typeLabel + '</span>'
+			   + '</div>'
+			   + '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
+			   + '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+			   + '<div class="text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+			   + '<button class="btn btn-sm btn-outline-danger mt-2" data-remove="' + idx + '">Remove</button>';
 		// Click to view details
 		div.addEventListener('click', function(e) {
 			if (e.target && e.target.hasAttribute('data-remove')) return; // Don't trigger on remove button
