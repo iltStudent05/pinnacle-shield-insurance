@@ -57,13 +57,34 @@
 			<p class="lead text-center mb-5">Fill out the form below to receive a personalized insurance quote. Select your insurance type to get started. The form will update to show only the fields relevant to your selection.</p>
 
 			<div class="row justify-content-center">
+				<!-- Progress Indicator -->
+				<div id="formProgressContainer" class="mb-4">
+					<div class="stepper d-flex justify-content-between align-items-center mb-2">
+						<div class="step-item text-center flex-fill">
+							<div id="stepCircle1" class="step-circle step-active">1</div>
+							<div class="step-label mt-1">Select Type</div>
+						</div>
+						<div class="step-line flex-fill"></div>
+						<div class="step-item text-center flex-fill">
+							<div id="stepCircle2" class="step-circle step-inactive">2</div>
+							<div class="step-label mt-1">Enter Details</div>
+						</div>
+						<div class="step-line flex-fill"></div>
+						<div class="step-item text-center flex-fill">
+							<div id="stepCircle3" class="step-circle step-inactive">3</div>
+							<div class="step-label mt-1">Review & Calculate</div>
+						</div>
+					</div>
+					<div id="stepSummary" class="text-center text-muted small">Choose the type of insurance you want a quote for.</div>
+				</div>
+
 				<div class="col-lg-8">
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<!-- Insurance Type Selector -->
 							<div class="mb-4 text-center">
 								<div class="btn-group w-100" role="group" aria-label="Insurance Type Selector">
-									<input type="radio" class="btn-check" name="insuranceType" id="autoType" value="auto" autocomplete="off" checked>
+									<input type="radio" class="btn-check" name="insuranceType" id="autoType" value="auto" autocomplete="off">
 									<label class="btn btn-outline-primary d-flex flex-column align-items-center py-3" for="autoType">
 										<span class="fs-2 mb-1"><i class="bi bi-car-front"></i></span>
 										Auto Insurance
