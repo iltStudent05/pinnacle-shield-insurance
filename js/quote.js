@@ -1,11 +1,49 @@
 // --- Form Switching ---
 document.addEventListener('DOMContentLoaded', function () {
+	// --- Modern Stepper Progress Indicator Logic ---
+	const stepCircle1 = document.getElementById('stepCircle1');
+	const stepCircle2 = document.getElementById('stepCircle2');
+	const stepCircle3 = document.getElementById('stepCircle3');
+	const stepSummary = document.getElementById('stepSummary');
+	let currentStep = 1;
+	function updateProgress(step) {
+		currentStep = step;
+		// Reset all
+		[stepCircle1, stepCircle2, stepCircle3].forEach((el, idx) => {
+			if (!el) return;
+			el.classList.remove('active', 'completed', 'bg-primary', 'bg-secondary');
+			el.classList.remove('step-active', 'step-completed', 'step-inactive');
+		});
+		document.querySelectorAll('.step-line').forEach(line => line.classList.remove('completed'));
+		// Step logic
+		if (step === 1) {
+			stepCircle1.classList.add('step-active');
+			stepCircle2.classList.add('step-inactive');
+			stepCircle3.classList.add('step-inactive');
+			stepSummary.textContent = 'Choose the type of insurance you want a quote for.';
+		} else if (step === 2) {
+			stepCircle1.classList.add('step-completed');
+			stepCircle2.classList.add('step-active');
+			stepCircle3.classList.add('step-inactive');
+			document.querySelectorAll('.step-line')[0].classList.add('completed');
+			stepSummary.textContent = 'Fill in your personal and insurance details.';
+		} else if (step === 3) {
+			stepCircle1.classList.add('step-completed');
+			stepCircle2.classList.add('step-completed');
+			stepCircle3.classList.add('step-active');
+			document.querySelectorAll('.step-line')[0].classList.add('completed');
+			document.querySelectorAll('.step-line')[1].classList.add('completed');
+			stepSummary.textContent = 'Review your information and get your quote.';
+		}
+	}
 	// Hide/show insurance fields
 	var typeRadios = document.querySelectorAll('input[name="insuranceType"]');
 	var autoFields = document.getElementById('autoFields') || document.getElementById('auto-fields');
 	var homeFields = document.getElementById('homeFields') || document.getElementById('home-fields');
 	var lifeFields = document.getElementById('lifeFields') || document.getElementById('life-fields');
 	var allFields = [autoFields, homeFields, lifeFields];
+	// Hide all fields initially
+	allFields.forEach(function(div) { if (div) div.classList.add('d-none'); });
 
 	function setRequiredAttrs(container, required) {
 		if (!container) return;
@@ -40,9 +78,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	typeRadios.forEach(function (radio) {
 		radio.addEventListener('change', function () {
 			showFields(this.value);
+			updateProgress(2);
 			var form = document.getElementById('quoteForm');
 			if (form) {
+				form.reset();
 				clearErrors(form);
+				// Re-enable Get Quote button
+				var getQuoteBtn = form.querySelector('button[type="submit"]');
+				if (getQuoteBtn) getQuoteBtn.disabled = false;
 			}
 			// Hide the current quote card
 			var resultsDiv = document.getElementById('quoteResults');
@@ -53,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// Initial state
-	var checked = document.querySelector('input[name="insuranceType"]:checked');
-	if (checked) showFields(checked.value);
+		// Start at step 1, don't show fields until a type is chosen
+		updateProgress(1);
 
 	// --- Form Validation & Submission ---
 	var form = document.getElementById('quoteForm');
@@ -66,15 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (!type) return;
 		var valid = validateForm(type.value, form);
 		if (valid) {
+			updateProgress(3);
 			var result = calculateQuote(type.value, form);
 			showResults(result);
-			// Reset form fields after a short delay, but keep the quote visible
-			setTimeout(function() {
-				form.reset();
-				clearErrors(form);
-				var checked = document.querySelector('input[name="insuranceType"]:checked');
-				if (checked) showFields(checked.value);
-			}, 500);
+			// Disable Get Quote button until reset
+			var getQuoteBtn = form.querySelector('button[type="submit"]');
+			if (getQuoteBtn) getQuoteBtn.disabled = true;
 		}
 	});
 
@@ -86,8 +126,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				resultsDiv.classList.add('d-none');
 				form.reset();
 				clearErrors(form);
-				var checked = document.querySelector('input[name="insuranceType"]:checked');
-				if (checked) showFields(checked.value);
+				updateProgress(1);
+				allFields.forEach(function(div) { if (div) div.classList.add('d-none'); });
+				// Re-enable Get Quote button
+				var getQuoteBtn = form.querySelector('button[type="submit"]');
+				if (getQuoteBtn) getQuoteBtn.disabled = false;
 			}
 		});
 	}
@@ -158,10 +201,15 @@ function renderSavedQuotes() {
 			home: 'Home Insurance',
 			life: 'Life Insurance'
 		}[quote.type] || '';
+		var badgeClass = {
+			auto: 'badge-auto',
+			home: 'badge-home',
+			life: 'badge-life'
+		}[quote.type] || 'bg-secondary';
 		div.innerHTML =
 			'<div class="d-flex justify-content-between align-items-center mb-2">'
 			+ '<strong>' + quote.name + '</strong>'
-			+ '<span class="badge bg-secondary">' + typeLabel + '</span>'
+			+ '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + typeLabel + '</span>'
 			+ '</div>'
 			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
 			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
@@ -445,6 +493,8 @@ function showResults(result) {
 	// Save quote event
 	saveBtn.addEventListener('click', function() {
 		saveQuote(result);
+		saveBtn.disabled = true;
+		saveBtn.textContent = 'Quote Saved';
 	});
 	// Show saved quotes section if any
 	renderSavedQuotes();
@@ -482,10 +532,15 @@ function renderSavedQuotes() {
 			home: 'Home Insurance',
 			life: 'Life Insurance'
 		}[quote.type] || '';
+		var badgeClass =
+			quote.type === 'auto' ? 'badge-auto' :
+			quote.type === 'home' ? 'badge-home' :
+			quote.type === 'life' ? 'badge-life' :
+			'bg-secondary';
 		div.innerHTML =
 			'<div class="d-flex justify-content-between align-items-center mb-2">'
 			+ '<strong>' + quote.name + '</strong>'
-			+ '<span class="badge bg-secondary">' + typeLabel + '</span>'
+			+ '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + typeLabel + '</span>'
 			+ '</div>'
 			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
 			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
