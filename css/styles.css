@@ -1,3 +1,16 @@
+/* Custom badge colors for saved quotes */
+.badge-auto {
+	background: #0d6efd !important;
+	color: #fff !important;
+}
+.badge-home {
+	background: #198754 !important;
+	color: #fff !important;
+}
+.badge-life {
+	background: #dc3545 !important;
+	color: #fff !important;
+}
 /* Stepper Styles for Quote Progress */
 .stepper { gap: 0.5rem; }
 .step-item { min-width: 90px; }

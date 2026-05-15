@@ -201,10 +201,15 @@ function renderSavedQuotes() {
 			home: 'Home Insurance',
 			life: 'Life Insurance'
 		}[quote.type] || '';
+		var badgeClass = {
+			auto: 'badge-auto',
+			home: 'badge-home',
+			life: 'badge-life'
+		}[quote.type] || 'bg-secondary';
 		div.innerHTML =
 			'<div class="d-flex justify-content-between align-items-center mb-2">'
 			+ '<strong>' + quote.name + '</strong>'
-			+ '<span class="badge bg-secondary">' + typeLabel + '</span>'
+			+ '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + typeLabel + '</span>'
 			+ '</div>'
 			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
 			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
@@ -527,10 +532,15 @@ function renderSavedQuotes() {
 			home: 'Home Insurance',
 			life: 'Life Insurance'
 		}[quote.type] || '';
+		var badgeClass =
+			quote.type === 'auto' ? 'badge-auto' :
+			quote.type === 'home' ? 'badge-home' :
+			quote.type === 'life' ? 'badge-life' :
+			'bg-secondary';
 		div.innerHTML =
 			'<div class="d-flex justify-content-between align-items-center mb-2">'
 			+ '<strong>' + quote.name + '</strong>'
-			+ '<span class="badge bg-secondary">' + typeLabel + '</span>'
+			+ '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + typeLabel + '</span>'
 			+ '</div>'
 			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
 			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
