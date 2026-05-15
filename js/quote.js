@@ -1,3 +1,12 @@
+// --- Security: Escape HTML to prevent XSS ---
+function escapeHTML(str) {
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
 // --- Form Switching ---
 document.addEventListener('DOMContentLoaded', function () {
 	   // --- Modern Stepper Progress Indicator Logic ---
@@ -206,15 +215,15 @@ function renderSavedQuotes() {
 			home: 'badge-home',
 			life: 'badge-life'
 		}[quote.type] || 'bg-secondary';
-		div.innerHTML =
-			'<div class="d-flex justify-content-between align-items-center mb-2">'
-			+ '<strong>' + quote.name + '</strong>'
-			+ '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + typeLabel + '</span>'
-			+ '</div>'
-			+ '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
-			+ '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
-			+ '<div class="text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
-			+ '<button class="btn btn-sm btn-outline-danger mt-2" data-remove="' + idx + '">Remove</button>';
+		   div.innerHTML =
+			   '<div class="d-flex justify-content-between align-items-center mb-2">'
+			   + '<strong>' + escapeHTML(quote.name) + '</strong>'
+			   + '<span class="badge ' + badgeClass + ' fs-5 px-3 py-2">' + escapeHTML(typeLabel) + '</span>'
+			   + '</div>'
+			   + '<div><strong>Monthly:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span> | '
+			   + '<strong>Annual:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+			   + '<div class="text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+			   + '<button class="btn btn-sm btn-outline-danger mt-2" data-remove="' + idx + '">Remove</button>';
 		// Click to view details
 		div.addEventListener('click', function(e) {
 			if (e.target && e.target.hasAttribute('data-remove')) return; // Don't trigger on remove button
@@ -576,25 +585,25 @@ function showSavedQuoteModal(quote) {
 		life: 'Life Insurance'
 	}[quote.type] || '';
 	var html = '';
-	html += '<div class="mb-3">'
-		+ '<h5 class="mb-1">' + typeLabel + ' for <span class="text-primary">' + quote.name + '</span></h5>'
-		+ '<div class="mb-2 text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
-		+ '<div><strong>Monthly Premium:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span></div>'
-		+ '<div><strong>Annual Premium:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
-		+ '</div>';
+	   html += '<div class="mb-3">'
+		   + '<h5 class="mb-1">' + escapeHTML(typeLabel) + ' for <span class="text-primary">' + escapeHTML(quote.name) + '</span></h5>'
+		   + '<div class="mb-2 text-muted small">Saved: ' + new Date(quote.savedAt).toLocaleString() + '</div>'
+		   + '<div><strong>Monthly Premium:</strong> <span class="text-success">' + formatCurrency(quote.monthly) + '</span></div>'
+		   + '<div><strong>Annual Premium:</strong> <span class="text-success">' + formatCurrency(quote.annual) + '</span></div>'
+		   + '</div>';
 	// Breakdown table
-	if (quote.breakdown && Array.isArray(quote.breakdown)) {
-		html += '<table class="table table-bordered table-striped">'
-			+ '<thead><tr><th>Factor</th><th>Your Info</th><th>Impact</th></tr></thead><tbody>';
-		quote.breakdown.forEach(function(row) {
-			html += '<tr>'
-				+ '<td>' + row[0] + '</td>'
-				+ '<td>' + row[1] + '</td>'
-				+ '<td>' + row[2] + '</td>'
-				+ '</tr>';
-		});
-		html += '</tbody></table>';
-	}
+	   if (quote.breakdown && Array.isArray(quote.breakdown)) {
+		   html += '<table class="table table-bordered table-striped">'
+			   + '<thead><tr><th>Factor</th><th>Your Info</th><th>Impact</th></tr></thead><tbody>';
+		   quote.breakdown.forEach(function(row) {
+			   html += '<tr>'
+				   + '<td>' + escapeHTML(row[0]) + '</td>'
+				   + '<td>' + escapeHTML(row[1]) + '</td>'
+				   + '<td>' + escapeHTML(row[2]) + '</td>'
+				   + '</tr>';
+		   });
+		   html += '</tbody></table>';
+	   }
 	modalBody.innerHTML = html;
 	var modal = new bootstrap.Modal(document.getElementById('savedQuoteModal'));
 	modal.show();
